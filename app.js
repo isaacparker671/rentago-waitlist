@@ -1,9 +1,11 @@
 // ===============================
 // Rentago Waitlist Frontend Logic
 // ===============================
+//
+// IMPORTANT:
+// 1) Create a Google Apps Script Web App (I’ll give you the code next)
+// 2) Paste the Web App URL into WEBHOOK_URL below
 
-// 1) Paste your Google Apps Script Web App URL here AFTER you deploy it
-// Example: https://script.google.com/macros/s/XXXXX/exec
 const WEBHOOK_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
 
 // Elements
@@ -54,7 +56,7 @@ closeBtn.addEventListener("click", closeModal);
 overlay.addEventListener("click", (e) => { if (e.target === overlay) closeModal(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
 
-// Fetch count on load
+// Get live count on load
 async function fetchCount() {
   if (!WEBHOOK_URL || WEBHOOK_URL.includes("PASTE_")) return;
   try {
@@ -62,11 +64,11 @@ async function fetchCount() {
     const d = await r.json();
     if (typeof d.count === "number") countNum.textContent = formatCount(d.count);
   } catch {
-    // Not critical — keep quiet
+    // ignore
   }
 }
 
-// Submit handler
+// Submit signup
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -78,14 +80,14 @@ form.addEventListener("submit", async (e) => {
   }
 
   if (!WEBHOOK_URL || WEBHOOK_URL.includes("PASTE_")) {
-    setMsg("error", "Webhook URL not set yet. Add your Google Apps Script URL in app.js.");
+    setMsg("error", "Webhook URL not set yet. Create the Google Apps Script URL and paste it into app.js.");
     return;
   }
 
   setLoading(true);
   setMsg(null, "Early members get priority access.");
 
-  // Optimistic count bump (only if count is already loaded)
+  // Optimistic bump (only if count already known)
   let prior = null;
   const raw = (countNum.textContent || "").replace(/,/g, "").trim();
   if (raw && raw !== "—" && !isNaN(Number(raw))) {
@@ -114,7 +116,6 @@ form.addEventListener("submit", async (e) => {
       return;
     }
 
-    // Sync accurate count
     if (typeof d.count === "number") countNum.textContent = formatCount(d.count);
 
     setMsg("success", "Welcome — you’re officially early.");
