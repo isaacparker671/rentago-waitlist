@@ -4,7 +4,7 @@
 //
 // Paste your Google Apps Script Web App URL below once deployed.
 // Example: https://script.google.com/macros/s/XXXXX/exec
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyewUp_5JEUTbkMWn8uX5KB4LwTW-j2KeKTtQ8lYPj_l6CP9ulUuApfE7LBL2k5MMm5pQ/exec";
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyOe4E2XxDDAqDRPz0aipPtfWqoy_gKGTsS-tpGQOH7cGvQ4fxcqPWCtdHtM5po8Tqujw/exec";
 
 const countNum = document.getElementById("countNum");
 const form = document.getElementById("waitlistForm");
