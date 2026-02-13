@@ -2,9 +2,8 @@
 // Rentago Waitlist Frontend Logic
 // ===============================
 //
-// Paste your Google Apps Script Web App URL below once deployed.
-// Example: https://script.google.com/macros/s/XXXXX/exec
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyOe4E2XxDDAqDRPz0aipPtfWqoy_gKGTsS-tpGQOH7cGvQ4fxcqPWCtdHtM5po8Tqujw/exec";
+// Connected Google Apps Script Web App URL (must end in /exec)
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycby7rBKzZi1hHk2YfhINm7TY2rWdpzuaDUtMIDQgVpUJktfHtWqSTQIhviyPy4e-ZhCfZw/exec";
 
 const countNum = document.getElementById("countNum");
 const form = document.getElementById("waitlistForm");
@@ -25,105 +24,113 @@ const formatCount = (n) => {
 };
 
 const setLoading = (on) => {
+  if (!btn) return;
   btn.disabled = on;
-  spinner.style.display = on ? "inline-block" : "none";
-  btnText.textContent = on ? "Joining..." : "Join the waitlist";
+  if (spinner) spinner.style.display = on ? "inline-block" : "none";
+  if (btnText) btnText.textContent = on ? "Joining..." : "Join the waitlist";
 };
 
 const setMsg = (type, text) => {
+  if (!msg) return;
   msg.classList.remove("error", "success");
   if (type) msg.classList.add(type);
   msg.textContent = text;
 };
 
 const openModal = (email) => {
-  mEmail.textContent = `Confirmed: ${email}`;
-  overlay.classList.add("show");
-  overlay.setAttribute("aria-hidden", "false");
+  if (mEmail) mEmail.textContent = `Confirmed: ${email}`;
+  if (overlay) {
+    overlay.classList.add("show");
+    overlay.setAttribute("aria-hidden", "false");
+  }
 };
 
 const closeModal = () => {
-  overlay.classList.remove("show");
-  overlay.setAttribute("aria-hidden", "true");
+  if (overlay) {
+    overlay.classList.remove("show");
+    overlay.setAttribute("aria-hidden", "true");
+  }
 };
 
-closeBtn.addEventListener("click", closeModal);
-overlay.addEventListener("click", (e) => { if (e.target === overlay) closeModal(); });
+// Modal events
+closeBtn?.addEventListener("click", closeModal);
+overlay?.addEventListener("click", (e) => { if (e.target === overlay) closeModal(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
 
+// Fetch live count
 async function fetchCount() {
-  if (!WEBHOOK_URL || WEBHOOK_URL.includes("PASTE_")) return;
   try {
     const r = await fetch(WEBHOOK_URL, { method: "GET" });
     const d = await r.json();
-    if (typeof d.count === "number") countNum.textContent = formatCount(d.count);
-  } catch {
-    // ignore
+    if (countNum && typeof d.count === "number") {
+      countNum.textContent = formatCount(d.count);
+    }
+  } catch (err) {
+    console.warn("Count fetch failed:", err);
   }
 }
 
-form.addEventListener("submit", async (e) => {
+// Submit signup
+form?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const email = (emailEl.value || "").trim().toLowerCase();
-  if (!validEmail(email)) return setMsg("error", "Please enter a valid email.");
+  const email = (emailEl?.value || "").trim().toLowerCase();
 
-  const webhookReady = WEBHOOK_URL && !WEBHOOK_URL.includes("PASTE_");
-
-  // Demo mode still feels premium (no annoying warning)
-  if (!webhookReady) {
-    const raw = (countNum.textContent || "").replace(/,/g, "").trim();
-    const current = (!raw || raw === "—" || isNaN(Number(raw))) ? 0 : Number(raw);
-    countNum.textContent = formatCount(current + 1);
-
-    setMsg("success", "You’re in. (Connect Google Sheets to save emails.)");
-    openModal(email);
-    emailEl.value = "";
+  if (!validEmail(email)) {
+    setMsg("error", "Please enter a valid email.");
     return;
   }
 
   setLoading(true);
-  setMsg(null, "No spam. Just launch updates + early access.");
+  setMsg(null, "Adding you to the waitlist…");
 
-  let prior = null;
-  const raw = (countNum.textContent || "").replace(/,/g, "").trim();
-  if (raw && raw !== "—" && !isNaN(Number(raw))) {
-    prior = Number(raw);
-    countNum.textContent = formatCount(prior + 1);
-  }
+  // Send as URL-encoded form data (most reliable with Apps Script)
+  const body = new URLSearchParams({ email }).toString();
 
   try {
     const r = await fetch(WEBHOOK_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ email })
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body
     });
 
-    const d = await r.json().catch(() => ({}));
+    // Try to read JSON response
+    let d = null;
+    try { d = await r.json(); } catch { d = null; }
 
-    if (d.status === "duplicate") {
-      if (prior !== null) countNum.textContent = formatCount(prior);
-      setMsg("error", "You’re already on the list. 👀");
-      return;
-    }
+    if (d && d.status) {
+      if (d.status === "duplicate") {
+        setMsg("error", "You’re already on the list. 👀");
+        return;
+      }
 
-    if (d.status !== "ok") {
-      if (prior !== null) countNum.textContent = formatCount(prior);
+      if (d.status === "ok") {
+        if (typeof d.count === "number" && countNum) {
+          countNum.textContent = formatCount(d.count);
+        }
+        setMsg("success", "Welcome — you’re officially early.");
+        openModal(email);
+        if (emailEl) emailEl.value = "";
+        return;
+      }
+
       setMsg("error", "Something went wrong. Try again.");
       return;
     }
 
-    if (typeof d.count === "number") countNum.textContent = formatCount(d.count);
-
-    setMsg("success", "Welcome — you’re officially early.");
+    // If response is opaque/unreadable but request likely succeeded:
+    setMsg("success", "Submitted! Check the Waitlist sheet tab.");
     openModal(email);
-    emailEl.value = "";
-  } catch {
-    if (prior !== null) countNum.textContent = formatCount(prior);
-    setMsg("error", "Network error. Please try again.");
+    if (emailEl) emailEl.value = "";
+    setTimeout(fetchCount, 700);
+
+  } catch (err) {
+    console.error("Signup failed:", err);
+    setMsg("error", "Network error. Try again.");
   } finally {
     setLoading(false);
   }
 });
 
+// Init
 fetchCount();
