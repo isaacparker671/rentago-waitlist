@@ -2,13 +2,10 @@
 // Rentago Waitlist Frontend Logic
 // ===============================
 //
-// IMPORTANT:
-// 1) Create a Google Apps Script Web App (I’ll give you the code next)
-// 2) Paste the Web App URL into WEBHOOK_URL below
-
+// Paste your Google Apps Script Web App URL below once deployed.
+// Example: https://script.google.com/macros/s/XXXXX/exec
 const WEBHOOK_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
 
-// Elements
 const countNum = document.getElementById("countNum");
 const form = document.getElementById("waitlistForm");
 const emailEl = document.getElementById("email");
@@ -21,7 +18,21 @@ const overlay = document.getElementById("overlay");
 const mEmail = document.getElementById("mEmail");
 const closeBtn = document.getElementById("closeBtn");
 
-// Helpers
+// ---- Apple-like reveals (no libraries)
+function setupReveals() {
+  const els = document.querySelectorAll(".reveal");
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) e.target.classList.add("in");
+    });
+  }, { threshold: 0.12 });
+  els.forEach((el) => io.observe(el));
+
+  // Ensure hero animates even if already in view
+  setTimeout(() => els.forEach(el => el.classList.add("in")), 200);
+}
+
+// ---- Helpers
 const validEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const formatCount = (n) => {
@@ -31,7 +42,7 @@ const formatCount = (n) => {
 const setLoading = (on) => {
   btn.disabled = on;
   spinner.style.display = on ? "inline-block" : "none";
-  btnText.textContent = on ? "Joining..." : "Join the waitlist";
+  btnText.textContent = on ? "Joining..." : "Join waitlist";
 };
 
 const setMsg = (type, text) => {
@@ -56,7 +67,7 @@ closeBtn.addEventListener("click", closeModal);
 overlay.addEventListener("click", (e) => { if (e.target === overlay) closeModal(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
 
-// Get live count on load
+// ---- Count
 async function fetchCount() {
   if (!WEBHOOK_URL || WEBHOOK_URL.includes("PASTE_")) return;
   try {
@@ -68,7 +79,7 @@ async function fetchCount() {
   }
 }
 
-// Submit signup
+// ---- Submit
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -79,15 +90,24 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
-  if (!WEBHOOK_URL || WEBHOOK_URL.includes("PASTE_")) {
-    setMsg("error", "Webhook URL not set yet. Create the Google Apps Script URL and paste it into app.js.");
+  // If webhook not set, still WOW the user (demo mode)
+  const webhookReady = WEBHOOK_URL && !WEBHOOK_URL.includes("PASTE_");
+  if (!webhookReady) {
+    // Fake count bump locally so it feels live
+    const raw = (countNum.textContent || "").replace(/,/g, "").trim();
+    const current = (!raw || raw === "—" || isNaN(Number(raw))) ? 0 : Number(raw);
+    countNum.textContent = formatCount(current + 1);
+
+    setMsg("success", "You’re in. (Connect Sheets to save emails.)");
+    openModal(email);
+    emailEl.value = "";
     return;
   }
 
   setLoading(true);
-  setMsg(null, "Early members get priority access.");
+  setMsg(null, "No spam. Just launch updates + early access.");
 
-  // Optimistic bump (only if count already known)
+  // Optimistic bump if count known
   let prior = null;
   const raw = (countNum.textContent || "").replace(/,/g, "").trim();
   if (raw && raw !== "—" && !isNaN(Number(raw))) {
@@ -129,5 +149,5 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-// Init
+setupReveals();
 fetchCount();
