@@ -9,96 +9,98 @@
 </head>
 
 <body>
-
   <header class="topbar">
     <div class="topbar__inner">
       <div class="brand">
-        <div class="brand__mark"></div>
         <div class="brand__name">Rentago</div>
       </div>
-      <span class="pill">Private waitlist</span>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-
-      <div>
+      <div class="hero__left">
         <p class="kicker">Launching soon</p>
-        <h1 class="headline">Access what you need.<br/>When you need it.</h1>
+
+        <h1 class="headline">
+          Access what you need.<br/>
+          When you need it.
+        </h1>
 
         <p class="subhead">
           Rentago is building the future of local access—rent or buy items from people near you.
           Join the waitlist for early access.
         </p>
 
-        <div class="counter">
+        <div class="counter" aria-live="polite">
+          <span class="livePill">
+            <span class="liveDot" aria-hidden="true"></span>
+            <span class="liveText">LIVE</span>
+          </span>
+
           <span class="counter__num" id="countNum">—</span>
-          <span class="counter__label">people joined</span>
+          <span class="counter__label">joined</span>
         </div>
 
         <form id="waitlistForm" class="form">
-          <input id="email" type="email" placeholder="Enter your email" required />
+          <label class="sr-only" for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="Enter your email" required />
           <button id="submitBtn" type="submit">
-            <span id="btnText">Join the waitlist</span>
-            <span class="spinner" id="spinner"></span>
+            <span class="btnText" id="btnText">Join the waitlist</span>
+            <span class="spinner" id="spinner" aria-hidden="true"></span>
           </button>
         </form>
 
-        <p class="fineprint" id="msg">
-          Early members get priority access.
-        </p>
+        <p class="fineprint" id="msg">Early members get priority access.</p>
 
         <div class="trustRow">
-          <span>No spam</span>
-          <span class="dot">•</span>
-          <span>Priority access</span>
-          <span class="dot">•</span>
+          <span>No spam</span><span class="dot">•</span>
+          <span>Priority access</span><span class="dot">•</span>
           <span>5 seconds</span>
         </div>
       </div>
 
-      <div class="glass">
-        <div class="glass__title">Why Rentago</div>
+      <div class="hero__right">
+        <div class="glass">
+          <div class="glass__title">Why Rentago</div>
 
-        <div class="features">
-          <div class="feature">
-            <div class="feature__icon">🏙️</div>
-            <div>
-              <div class="feature__name">Built for your city</div>
-              <div class="feature__desc">Discover real items near you—fast.</div>
+          <div class="features">
+            <div class="feature">
+              <div class="feature__icon">🏙️</div>
+              <div>
+                <div class="feature__name">Built for your city</div>
+                <div class="feature__desc">Discover real items near you—fast.</div>
+              </div>
+            </div>
+
+            <div class="feature">
+              <div class="feature__icon">💸</div>
+              <div>
+                <div class="feature__name">Earn from what you own</div>
+                <div class="feature__desc">Turn unused gear into income.</div>
+              </div>
+            </div>
+
+            <div class="feature">
+              <div class="feature__icon">🧰</div>
+              <div>
+                <div class="feature__name">Access without commitment</div>
+                <div class="feature__desc">Rent instead of buying.</div>
+              </div>
             </div>
           </div>
 
-          <div class="feature">
-            <div class="feature__icon">💸</div>
-            <div>
-              <div class="feature__name">Earn from what you own</div>
-              <div class="feature__desc">Turn unused gear into income.</div>
-            </div>
-          </div>
-
-          <div class="feature">
-            <div class="feature__icon">🧰</div>
-            <div>
-              <div class="feature__name">Access without commitment</div>
-              <div class="feature__desc">Rent instead of buying.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="note">
-          You’re early — and that matters.
+          <div class="note">You’re early — and that matters.</div>
         </div>
       </div>
-
     </section>
   </main>
 
-  <div class="overlay" id="overlay">
-    <div class="modal">
+  <!-- Success Modal -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="badge">Founding Waitlist Member</div>
-      <h2 class="mTitle">You’re in 🎉</h2>
+      <h2 class="mTitle" id="modalTitle">You’re in 🎉</h2>
       <p class="mText">
         Welcome to the early group shaping Rentago — you’re becoming part of something big.
       </p>
@@ -107,11 +109,8 @@
     </div>
   </div>
 
-  <footer class="footer">
-    © 2026 Rentago. All rights reserved.
-  </footer>
+  <footer class="footer">© 2026 Rentago. All rights reserved.</footer>
 
   <script src="app.js"></script>
-
 </body>
 </html>
