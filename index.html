@@ -9,47 +9,43 @@
 </head>
 
 <body>
-  <!-- Top Nav -->
   <header class="nav">
     <div class="nav__inner">
-      <div class="nav__brand">Rentago</div>
-
-      <div class="nav__actions">
-        <a class="nav__link" href="#how">How it works</a>
-        <a class="nav__link" href="#join">Waitlist</a>
-      </div>
+      <div class="brand">Rentago</div>
+      <nav class="nav__links">
+        <a href="#why">Why</a>
+        <a href="#join" class="btn btn--ghost">Join</a>
+      </nav>
     </div>
   </header>
 
-  <!-- Hero -->
   <main class="wrap">
     <section class="hero" id="join">
       <div class="hero__grid">
-        <!-- Left -->
-        <div class="hero__copy reveal">
-          <div class="pill">
-            <span class="pill__dot" aria-hidden="true"></span>
-            <span class="pill__text">LIVE WAITLIST</span>
+        <div class="hero__copy">
+          <div class="live">
+            <span class="live__dot" aria-hidden="true"></span>
+            <span class="live__text">LIVE WAITLIST</span>
           </div>
 
           <h1 class="h1">
-            The easiest way to<br/>
-            <span class="grad">rent or buy</span> locally.
+            The cleanest way to<br/>
+            <span class="grad">rent or buy</span> nearby.
           </h1>
 
-          <p class="p">
-            Rentago is building the future of local access—rent or buy items from people near you.
-            Join the waitlist for early access.
+          <p class="lead">
+            Rentago lets you rent or buy items from people near you — fast messaging, clear availability,
+            and a premium experience from day one.
           </p>
 
-          <div class="stats reveal">
+          <div class="stats">
             <div class="stat">
               <div class="stat__num" id="countNum">—</div>
-              <div class="stat__label">people joined</div>
+              <div class="stat__label">joined</div>
             </div>
             <div class="stat">
-              <div class="stat__num">Fast</div>
-              <div class="stat__label">5-second signup</div>
+              <div class="stat__num">5 sec</div>
+              <div class="stat__label">signup</div>
             </div>
             <div class="stat">
               <div class="stat__num">Priority</div>
@@ -57,121 +53,123 @@
             </div>
           </div>
 
-          <form class="form reveal" id="waitlistForm">
-            <label class="sr-only" for="email">Email</label>
+          <form class="form" id="waitlistForm">
             <div class="form__row">
               <input id="email" name="email" type="email" autocomplete="email" placeholder="Enter your email" required />
-              <button id="submitBtn" type="submit">
-                <span id="btnText">Join waitlist</span>
+              <button id="submitBtn" type="submit" class="btn btn--primary">
+                <span id="btnText">Join the waitlist</span>
                 <span class="spinner" id="spinner" aria-hidden="true"></span>
               </button>
             </div>
             <p class="hint" id="msg">No spam. Just launch updates + early access.</p>
           </form>
 
-          <div class="fine reveal">
-            By joining, you agree to receive early access updates from Rentago.
+          <div class="trust">
+            <span>Apple-clean UX</span><span class="dot">•</span>
+            <span>Mobile-first</span><span class="dot">•</span>
+            <span>Built to scale</span>
           </div>
         </div>
 
-        <!-- Right (Apple-style “product” panel) -->
-        <div class="hero__showcase reveal">
-          <div class="device">
-            <div class="device__top">
-              <span class="device__dot"></span><span class="device__dot"></span><span class="device__dot"></span>
-              <div class="device__title">Rentago Preview</div>
-            </div>
-
-            <div class="device__content">
-              <div class="card card--big">
-                <div class="card__k">Nearby</div>
-                <div class="card__t">Power Drill</div>
-                <div class="card__m">$8 / day • 2.1 mi</div>
-                <div class="chipRow">
-                  <span class="chip">Tools</span>
-                  <span class="chip">Available</span>
-                  <span class="chip chip--blue">Message</span>
-                </div>
-              </div>
-
-              <div class="grid2">
-                <div class="card">
-                  <div class="card__k">Earn</div>
-                  <div class="card__t">List your stuff</div>
-                  <div class="card__m">Get paid locally</div>
-                </div>
-                <div class="card">
-                  <div class="card__k">Trust</div>
-                  <div class="card__t">Ratings</div>
-                  <div class="card__m">Buy & rent safely</div>
-                </div>
-              </div>
-
-              <div class="glassCallout">
-                <div class="glassCallout__t">Investor-ready experience</div>
-                <div class="glassCallout__m">Premium design. Real utility. Real demand.</div>
+        <div class="hero__show">
+          <div class="phone">
+            <div class="phone__top">
+              <div class="phone__pill">Rentago Preview</div>
+              <div class="phone__icons">
+                <span></span><span></span><span></span>
               </div>
             </div>
 
-            <div class="device__glow" aria-hidden="true"></div>
+            <div class="phone__body">
+              <div class="card card--featured">
+                <div class="card__meta">
+                  <span class="badge badge--blue">Available</span>
+                  <span class="badge">2.1 mi</span>
+                </div>
+                <div class="card__title">Power Drill</div>
+                <div class="card__sub">$8 / day • Tools • Great condition</div>
+                <div class="card__cta">
+                  <button class="chip chip--blue" type="button">Message</button>
+                  <button class="chip" type="button">Rent</button>
+                  <button class="chip" type="button">Buy</button>
+                </div>
+              </div>
+
+              <div class="row2">
+                <div class="mini">
+                  <div class="mini__k">Earn</div>
+                  <div class="mini__t">List in seconds</div>
+                  <div class="mini__m">Turn stuff into income.</div>
+                </div>
+                <div class="mini">
+                  <div class="mini__k">Trust</div>
+                  <div class="mini__t">Ratings</div>
+                  <div class="mini__m">Confidence at a glance.</div>
+                </div>
+              </div>
+
+              <div class="glass">
+                <div class="glass__t">Premium, investor-ready feel.</div>
+                <div class="glass__m">Clean UI, clear flows, real demand.</div>
+              </div>
+            </div>
+
+            <div class="phone__glow" aria-hidden="true"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- How it works -->
-    <section class="how" id="how">
-      <div class="how__inner">
-        <h2 class="h2 reveal">How Rentago works</h2>
-        <p class="p reveal">
-          Keep it simple: find items nearby, message the owner, rent or buy—done.
+    <section class="why" id="why">
+      <div class="why__inner">
+        <h2 class="h2">Why Rentago</h2>
+        <p class="lead lead--sm">
+          Fast local access. Simple messaging. Clear availability. No clutter.
         </p>
 
         <div class="tiles">
-          <div class="tile reveal">
+          <div class="tile">
             <div class="tile__icon">📍</div>
-            <div class="tile__t">Search nearby</div>
-            <div class="tile__m">See items around you instantly.</div>
+            <div class="tile__t">Nearby inventory</div>
+            <div class="tile__m">Find real items around you instantly.</div>
           </div>
-          <div class="tile reveal">
+          <div class="tile">
             <div class="tile__icon">💬</div>
-            <div class="tile__t">Message owners</div>
-            <div class="tile__m">Ask questions and coordinate pickup.</div>
+            <div class="tile__t">Message first</div>
+            <div class="tile__m">Talk it out, then confirm when ready.</div>
           </div>
-          <div class="tile reveal">
+          <div class="tile">
             <div class="tile__icon">✅</div>
-            <div class="tile__t">Rent or buy</div>
-            <div class="tile__m">Easy transactions. Clear availability.</div>
+            <div class="tile__t">Clean transactions</div>
+            <div class="tile__m">Rent or buy with clarity and trust.</div>
           </div>
         </div>
       </div>
     </section>
 
     <footer class="footer">
-      <div>© 2026 Rentago. All rights reserved.</div>
+      © 2026 Rentago. All rights reserved.
     </footer>
   </main>
 
-  <!-- WOW Modal -->
+  <!-- Success modal -->
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modal__badge">
-        <span class="modal__badgeDot"></span>
+        <span class="modal__dot" aria-hidden="true"></span>
         Founding Waitlist Member
       </div>
 
-      <h3 class="modal__title" id="modalTitle">You’re in. 🎉</h3>
+      <h3 class="modal__title" id="modalTitle">You’re in 🎉</h3>
       <p class="modal__text">
-        You’re early — and that matters. You’re becoming part of something big with Rentago.
+        Welcome to the early group shaping Rentago — you’re becoming part of something big.
       </p>
 
       <div class="modal__email" id="mEmail"></div>
 
-      <div class="modal__actions">
-        <button class="modal__btn" id="closeBtn">Close</button>
-      </div>
+      <button class="btn btn--primary btn--full" id="closeBtn">Close</button>
 
-      <div class="modal__shine" aria-hidden="true"></div>
+      <div class="modal__glow" aria-hidden="true"></div>
     </div>
   </div>
 
