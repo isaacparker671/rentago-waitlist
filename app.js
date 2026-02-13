@@ -18,21 +18,6 @@ const overlay = document.getElementById("overlay");
 const mEmail = document.getElementById("mEmail");
 const closeBtn = document.getElementById("closeBtn");
 
-// ---- Apple-like reveals (no libraries)
-function setupReveals() {
-  const els = document.querySelectorAll(".reveal");
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) e.target.classList.add("in");
-    });
-  }, { threshold: 0.12 });
-  els.forEach((el) => io.observe(el));
-
-  // Ensure hero animates even if already in view
-  setTimeout(() => els.forEach(el => el.classList.add("in")), 200);
-}
-
-// ---- Helpers
 const validEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const formatCount = (n) => {
@@ -42,7 +27,7 @@ const formatCount = (n) => {
 const setLoading = (on) => {
   btn.disabled = on;
   spinner.style.display = on ? "inline-block" : "none";
-  btnText.textContent = on ? "Joining..." : "Join waitlist";
+  btnText.textContent = on ? "Joining..." : "Join the waitlist";
 };
 
 const setMsg = (type, text) => {
@@ -62,12 +47,10 @@ const closeModal = () => {
   overlay.setAttribute("aria-hidden", "true");
 };
 
-// Modal events
 closeBtn.addEventListener("click", closeModal);
 overlay.addEventListener("click", (e) => { if (e.target === overlay) closeModal(); });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
 
-// ---- Count
 async function fetchCount() {
   if (!WEBHOOK_URL || WEBHOOK_URL.includes("PASTE_")) return;
   try {
@@ -79,26 +62,21 @@ async function fetchCount() {
   }
 }
 
-// ---- Submit
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const email = (emailEl.value || "").trim().toLowerCase();
+  if (!validEmail(email)) return setMsg("error", "Please enter a valid email.");
 
-  if (!validEmail(email)) {
-    setMsg("error", "Please enter a valid email.");
-    return;
-  }
-
-  // If webhook not set, still WOW the user (demo mode)
   const webhookReady = WEBHOOK_URL && !WEBHOOK_URL.includes("PASTE_");
+
+  // Demo mode still feels premium (no annoying warning)
   if (!webhookReady) {
-    // Fake count bump locally so it feels live
     const raw = (countNum.textContent || "").replace(/,/g, "").trim();
     const current = (!raw || raw === "—" || isNaN(Number(raw))) ? 0 : Number(raw);
     countNum.textContent = formatCount(current + 1);
 
-    setMsg("success", "You’re in. (Connect Sheets to save emails.)");
+    setMsg("success", "You’re in. (Connect Google Sheets to save emails.)");
     openModal(email);
     emailEl.value = "";
     return;
@@ -107,7 +85,6 @@ form.addEventListener("submit", async (e) => {
   setLoading(true);
   setMsg(null, "No spam. Just launch updates + early access.");
 
-  // Optimistic bump if count known
   let prior = null;
   const raw = (countNum.textContent || "").replace(/,/g, "").trim();
   if (raw && raw !== "—" && !isNaN(Number(raw))) {
@@ -149,5 +126,4 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-setupReveals();
 fetchCount();
